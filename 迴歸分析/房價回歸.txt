@@ -1,0 +1,112 @@
+-----------------------------
+迴圈
+-----------------------------
+4. for 迴圈  (另可搭配「break跳出」、「next下一號」
+範例：求  之值？
+s=rep(0,8)
+for(i in 1:8) { s[i]=i^i }
+sum(s)
+
+6. if指令
+例如：檢查數列192, 915, 857, 459, 378, 144, 139, 5, 133, 509中 (共10項)，有幾個7的倍數？
+x=c(192, 915, 857, 459, 378, 144, 133, 5, 138, 509)
+z=rep(0,10)
+for(i in 1:10) if(x[i]%%7==0) z[i]=1
+sum(z)
+
+用sum(x%%7==0) 亦可！
+
+
+----------------------------
+作業題解
+----------------------------
+stock.data <- read_csv("TWSE_Stock Data_2012-2017(1).csv")
+
+stock.data <- stock.data %>%
+  # Get the date column
+  gather(
+    key = "date",
+    value = "prices",
+    ___2.3___
+  ) %>%
+  # Create open and close columns
+  spread(
+    key = ___3.1___,
+    value = ___3.2___
+  ) %>%
+  # Seperate date into year, month, and day columns
+  separate(
+    col = ___4.1___, 
+    into = ___4.2___,
+    sep = ___4.3___,
+    convert = TRUE
+  )
+
+Ans:
+
+library("tidyverse")
+stock.data <- read_csv("TWSE_Stock Data_2012-2017(1).csv")
+ stock.data <- stock.data %>%
+     gather(
+         key = "date",
+        value ="price",
+         stock.data.colnames[3:ncol(stock.data)]
+     )
+
+ head(stock.data)
+stock.data <- stock.data %>%
+    spread(
+        key = "type",
+        value = "price"
+    )
+
+head(stock.data)
+stock.data <- stock.data %>%
+    separate(
+        col = date, 
+        into = c("year", "month", "day"),
+        sep = "/",
+        convert = TRUE
+    )
+
+head(stock.data)
+stock.data <- read_csv("TWSE_Stock Data_2012-2017(1).csv")
+ stock.data <- stock.data %>%
+     # Get the date column
+     gather(
+         key = "date",
+        value = "price",
+         stock.data.colnames[3:ncol(stock.data)]
+     ) %>%
+     # Create open and close columns
+     spread(
+         key = "type",
+         value = "price"
+     ) %>%
+     # Seperate date into year, month, and day columns
+     separate(
+         col = date, 
+         into = c("year", "month", "day"),
+         sep = "/",
+         convert = TRUE
+     )
+ 
+ stock.data
+
+----------------------------
+作業題解2
+----------------------------
+a<- c(rep(seq(1,4 ,1),4))
+a[c(seq(4,16,4))]<-5
+b[c(seq(1,4,1))]<-5
+A<-function(a,b){X<-sum(a**2)Y<-sum(b**2)Z<-sum(a-b)result<-}
+
+----------------------------
+寫出去
+----------------------------
+write_csv(name,"name.csv")
+----------------------------
+寫進來
+----------------------------
+
+	

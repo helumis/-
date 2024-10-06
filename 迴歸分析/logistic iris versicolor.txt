@@ -1,0 +1,24 @@
+library(ggplot2) 
+library(dplyr) 
+library(pROC) 
+data(iris)
+iris$Outcome <- as.factor(ifelse(iris$Species == "versicolor", 1, 0)) 
+model <- glm(Outcome ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width, data = iris, family = "binomial") 
+Summary(model)
+# Predict probabilities for each observation.
+iris$PredictedProb <- predict(model, type = "response") 
+# Confusion matrix to evaluate the model's performance
+conf_matrix <- table(iris$Outcome, ifelse(iris$PredictedProb > 0.5, 1, 0)) 
+# Display confusion matrix 
+print("Confusion Matrix:") 
+print(conf_matrix) 
+# ROC (Receiver Operating Characteristic) Curve 
+roc_curve <- roc(iris$Outcome, iris$PredictedProb) 
+# Plot ROC Curve 
+plot(roc_curve, main = "ROC Curve", col = "blue", lwd = 2) 
+# Add AUC value to the plot 
+auc_value <- round(auc(roc_curve), 2) 
+text(0.8, 0.2, paste("AUC =", auc_value), col = "red", cex = 1.2) 
+
+
+
