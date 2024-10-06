@@ -1,0 +1,61 @@
+proc import datafile="C:\Users\410650229\Documents\SAS 問卷調查結果.xlsx"
+     out=d1
+     dbms=xlsx replace;
+	  sheet='final';
+	  getnames=yes;
+run;
+proc print data=d1;
+run;
+PROC TABULATE DATA=d1;
+   CLASS I1 Q9/ MISSING;
+   TABLE Q9 all ,I1 all *(n  pctn);
+RUN;
+
+%macro calculate_counts(variable);
+   proc freq data=d1;
+      tables &variable / missing out=counts;
+   run;
+%mend;
+
+/* 定義要進行統計計算的變數清單 */
+%let var_list = I1 I2 I3 I4 Q1 Q2_1 Q2_2 Q2_3 Q2_4 Q2_5 Q2_6 Q2_7 Q2_8 Q3 Q4 Q5 Q6_1 Q6_2 Q6_3 Q6_4 Q6_5 Q6_6 Q7 Q8_1 Q8_2 Q8_3 Q8_4 Q8_5 Q9 Q10 Q10_1;
+%let num_vars = %sysfunc(countw(&var_list));
+
+/* 迴圈遍歷變數清單並調用巨集 */
+%macro loop_variables;
+   %do i = 1 %to &num_vars;
+      %let current_var = %scan(&var_list, &i);
+      %calculate_counts(variable=&current_var);
+   %end;
+%mend;
+
+/* 執行迴圈 */
+%loop_variables;
+
+
+
+
+*#TTest#################################################;
+/* 設定SAS運行的環境 */
+options missing='.';
+ods graphics on;
+
+/* 執行T檢定 */
+proc ttest data=d1 alpha=0.05;
+  class I1;
+  var Q9;
+run;
+
+	proc reg data=d1 alpha=0.05;
+	  model Q9 = Q1;
+	run;
+
+PROC ANOVA data=d1 ;
+  CLASS Q7;
+  MODEL Q1 = Q7;
+RUN;
+
+proc freq data=d1 ;
+  /* 需要檢定的變數 */
+  tables Q6_1*Q7 Q6_2*Q7 Q6_3*Q7 Q6_4*Q7 Q6_5*Q7 Q6_6*Q7 / chisq;
+run;
